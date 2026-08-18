@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, func
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -13,6 +13,12 @@ class InventorySnapshot(Base):
     column can't answer 'how has coverage trended over the last 30 days'."""
 
     __tablename__ = "inventory_snapshots"
+    __table_args__ = (
+        UniqueConstraint(
+            "business_id", "product_id", "channel_id", "snapshot_date",
+            name="uq_inventory_snapshot_identity",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     business_id: Mapped[int] = mapped_column(ForeignKey("businesses.id"), nullable=False, index=True)

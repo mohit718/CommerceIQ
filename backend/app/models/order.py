@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, func
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -13,6 +13,12 @@ class Order(Base):
     distinct orders, not line items."""
 
     __tablename__ = "orders"
+    __table_args__ = (
+        UniqueConstraint(
+            "business_id", "channel_id", "external_order_id",
+            name="uq_orders_business_channel_external_id",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     business_id: Mapped[int] = mapped_column(ForeignKey("businesses.id"), nullable=False, index=True)
@@ -33,6 +39,12 @@ class OrderLine(Base):
     if the mapping is corrected later."""
 
     __tablename__ = "order_lines"
+    __table_args__ = (
+        UniqueConstraint(
+            "order_id", "channel_product_id",
+            name="uq_order_lines_order_channel_product",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     business_id: Mapped[int] = mapped_column(ForeignKey("businesses.id"), nullable=False, index=True)
