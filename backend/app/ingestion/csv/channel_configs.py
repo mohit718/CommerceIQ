@@ -3,7 +3,8 @@ Per-channel CSV column configuration. This is the ONLY place that knows a
 particular channel calls the order-id column 'order-id' vs 'Order Id' — the
 rest of the ingestion pipeline only ever deals with our canonical field
 names (external_order_id, external_sku, order_date, quantity, gross_amount,
-discount_amount, fee_amount, shipping_amount, tax_amount).
+discount_amount, fee_amount, shipping_amount, tax_amount, return_date,
+reason, refund_amount).
 
 Column names here are mocked/representative, not pulled from real
 marketplace export docs — swap them for the real ones once real
@@ -34,6 +35,17 @@ CHANNEL_CONFIGS: dict[str, dict] = {
             },
             "date_format": "%Y-%m-%d",
         },
+        "returns": {
+            "column_map": {
+                "external_order_id": "order-id",
+                "external_sku": "sku",
+                "quantity": "quantity-returned",
+                "return_date": "return-date",
+                "reason": "return-reason",
+                "refund_amount": "refund-amount",
+            },
+            "date_format": "%Y-%m-%d",
+        },
     },
     "flipkart": {
         "sales": {
@@ -55,6 +67,17 @@ CHANNEL_CONFIGS: dict[str, dict] = {
                 "external_sku": "SKU",
                 "snapshot_date": "Snapshot Date",
                 "quantity_on_hand": "Available Qty",
+            },
+            "date_format": "%d-%m-%Y",
+        },
+        "returns": {
+            "column_map": {
+                "external_order_id": "Order Id",
+                "external_sku": "SKU",
+                "quantity": "Return Quantity",
+                "return_date": "Return Date",
+                "reason": "Return Reason",
+                "refund_amount": "Refund Amount",
             },
             "date_format": "%d-%m-%Y",
         },
@@ -84,6 +107,17 @@ CHANNEL_CONFIGS: dict[str, dict] = {
             },
             "date_format": "%Y-%m-%d",
         },
+        "returns": {
+            "column_map": {
+                "external_order_id": "Name",
+                "external_sku": "Lineitem sku",
+                "quantity": "Return Quantity",
+                "return_date": "Return Date",
+                "reason": "Return Reason",
+                "refund_amount": "Refund Amount",
+            },
+            "date_format": "%Y-%m-%d",
+        },
     },
     "offline": {
         "sales": {
@@ -104,6 +138,17 @@ CHANNEL_CONFIGS: dict[str, dict] = {
                 "external_sku": "Item Code",
                 "snapshot_date": "Stock Date",
                 "quantity_on_hand": "Stock Qty",
+            },
+            "date_format": "%d/%m/%Y",
+        },
+        "returns": {
+            "column_map": {
+                "external_order_id": "Bill No",
+                "external_sku": "Item Code",
+                "quantity": "Return Qty",
+                "return_date": "Return Date",
+                "reason": "Reason",
+                "refund_amount": "Refund Amount",
             },
             "date_format": "%d/%m/%Y",
         },
@@ -133,6 +178,17 @@ GENERIC_FALLBACK_CONFIG = {
             "external_sku": "sku",
             "snapshot_date": "snapshot_date",
             "quantity_on_hand": "quantity_on_hand",
+        },
+        "date_format": "%Y-%m-%d",
+    },
+    "returns": {
+        "column_map": {
+            "external_order_id": "order_id",
+            "external_sku": "sku",
+            "quantity": "quantity",
+            "return_date": "return_date",
+            "reason": "reason",
+            "refund_amount": "refund_amount",
         },
         "date_format": "%Y-%m-%d",
     },

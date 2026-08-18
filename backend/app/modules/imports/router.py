@@ -7,7 +7,7 @@ from app.jobs.ingestion_jobs import run_import_job
 from app.models import Channel, ImportBatch, ImportRawRow
 from app.shared.tenancy import RequestContext, get_current_context
 
-VALID_IMPORT_TYPES = {"sales", "inventory", "products"}
+VALID_IMPORT_TYPES = {"sales", "inventory", "products", "returns"}
 
 router = APIRouter(prefix="/imports", tags=["imports"])
 

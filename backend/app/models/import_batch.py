@@ -24,7 +24,7 @@ class ImportBatch(Base):
     channel_id: Mapped[int] = mapped_column(ForeignKey("channels.id"), nullable=False, index=True)
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)
     storage_path: Mapped[str | None] = mapped_column(String(500))
-    import_type: Mapped[str] = mapped_column(String(20), nullable=False)  # sales | inventory | products
+    import_type: Mapped[str] = mapped_column(String(20), nullable=False)  # sales | inventory | products | returns
     status: Mapped[str] = mapped_column(String(20), default="pending")  # pending|processing|completed|failed
     row_count: Mapped[int] = mapped_column(Integer, default=0)
     error_count: Mapped[int] = mapped_column(Integer, default=0)

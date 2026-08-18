@@ -1,13 +1,20 @@
 """
 Orchestrates: raw file -> import_raw_rows -> validate -> normalize ->
-product mapping -> dedup/upsert -> orders/order_lines or
+product mapping -> dedup/upsert -> orders/order_lines/returns or
 inventory_snapshots -> import_batch status.
+
+process_batch() also returns the set of dates it touched (sales order_dates
+and returns return_dates) so the caller can trigger analytics recomputation
+for exactly those dates — see app/jobs/ingestion_jobs.py and
+app/jobs/analytics_jobs.py. Inventory/product imports don't affect daily
+metrics, so they always return an empty set.
 
 This module is intentionally decoupled from *how* it gets invoked — see
 app/jobs/ingestion_jobs.py for the BackgroundTasks entrypoint that opens
 its own DB session. process_batch() itself just takes a Session, so it's
 directly unit-testable without going through HTTP or BackgroundTasks.
 """
+from datetime import date
 from decimal import Decimal
 
 from sqlalchemy.orm import Session
@@ -18,19 +25,33 @@ from app.ingestion.normalization.normalizers import normalize_currency, normaliz
 from app.ingestion.normalization.product_mapper import resolve_product
 from app.ingestion.storage import get_storage
 from app.ingestion.storage.base import FileStorage
-from app.models import Channel, ImportBatch, ImportRawRow, InventorySnapshot, Order, OrderLine, Product
+from app.models import (
+    Channel,
+    ChannelProduct,
+    ImportBatch,
+    ImportRawRow,
+    InventorySnapshot,
+    Order,
+    OrderLine,
+    Product,
+    Return,
+)
 from app.shared.exceptions import DuplicateRowSkipped, IngestionRowError
 from app.shared.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-def process_batch(db: Session, batch: ImportBatch, storage: FileStorage | None = None) -> None:
+def process_batch(db: Session, batch: ImportBatch, storage: FileStorage | None = None) -> set[date]:
     """Processes every row of an import batch. Never raises for row-level
     problems — those are captured per-row on ImportRawRow. Only raises for
     batch-level failures (file unreadable, totally unparseable CSV), which
     the caller (ingestion_jobs.run_import_job) marks as batch.status =
-    'failed'."""
+    'failed'.
+
+    Returns the set of dates whose daily_product_metrics/daily_channel_metrics
+    need recomputing as a result of this batch (empty for inventory/products
+    imports)."""
     storage = storage or get_storage()
 
     channel = db.query(Channel).filter(Channel.id == batch.channel_id).first()
@@ -50,21 +71,28 @@ def process_batch(db: Session, batch: ImportBatch, storage: FileStorage | None =
 
     batch.row_count = len(rows)
     error_count = 0
+    touched_dates: set[date] = set()
 
     for raw in rows:
         raw_row = ImportRawRow(import_batch_id=batch.id, raw_data=raw)
         db.add(raw_row)
-        db.flush()  # need raw_row.id-less insert is fine; flush just persists it in-session
+        db.flush()
 
         mapped = map_row(raw, column_map)
 
         try:
             if batch.import_type == "sales":
-                _process_sales_row(db, batch, mapped, config)
+                touched = _process_sales_row(db, batch, mapped, config)
+                if touched:
+                    touched_dates.add(touched)
             elif batch.import_type == "inventory":
                 _process_inventory_row(db, batch, mapped, date_format)
             elif batch.import_type == "products":
                 _process_product_row(db, batch, mapped)
+            elif batch.import_type == "returns":
+                touched = _process_returns_row(db, batch, mapped, date_format)
+                if touched:
+                    touched_dates.add(touched)
             else:
                 raise IngestionRowError(f"unknown import_type: {batch.import_type}")
 
@@ -90,11 +118,13 @@ def process_batch(db: Session, batch: ImportBatch, storage: FileStorage | None =
     batch.status = "completed" if error_count < len(rows) or len(rows) == 0 else "failed"
     db.commit()
 
+    return touched_dates
+
 
 # --- per-row-type processors -------------------------------------------------
 
 
-def _process_sales_row(db: Session, batch: ImportBatch, mapped: dict, config: dict) -> None:
+def _process_sales_row(db: Session, batch: ImportBatch, mapped: dict, config: dict) -> date | None:
     external_sku = mapped.get("external_sku")
     if not external_sku:
         raise IngestionRowError("missing SKU")
@@ -112,8 +142,8 @@ def _process_sales_row(db: Session, batch: ImportBatch, mapped: dict, config: di
         raise IngestionRowError("missing order date")
     order_date = normalize_date(order_date_raw, config.get("date_format"))
 
-    # get-or-create order header (dedup at the order level — Section on
-    # dedup: (business_id, channel_id, external_order_id) is unique)
+    # get-or-create order header (dedup at the order level:
+    # (business_id, channel_id, external_order_id) is unique)
     order = (
         db.query(Order)
         .filter(
@@ -131,7 +161,7 @@ def _process_sales_row(db: Session, batch: ImportBatch, mapped: dict, config: di
             order_date=order_date,
         )
         db.add(order)
-        db.flush()  # need order.id for the line below
+        db.flush()
 
     # dedup at the line level: same order + same resolved channel_product
     # means this exact row was already imported (e.g. re-uploaded file).
@@ -141,7 +171,9 @@ def _process_sales_row(db: Session, batch: ImportBatch, mapped: dict, config: di
         .first()
     )
     if existing_line:
-        raise DuplicateRowSkipped(f"duplicate row: order {external_order_id} / sku {external_sku} already imported")
+        raise DuplicateRowSkipped(
+            f"duplicate row: order {external_order_id} / sku {external_sku} already imported"
+        )
 
     quantity = int(mapped.get("quantity") or 1)
     gross = normalize_currency(mapped.get("gross_amount"))
@@ -169,6 +201,8 @@ def _process_sales_row(db: Session, batch: ImportBatch, mapped: dict, config: di
         tax_amount=tax,
     )
     db.add(line)
+
+    return order_date
 
 
 def _process_inventory_row(db: Session, batch: ImportBatch, mapped: dict, date_format: str | None) -> None:
@@ -250,7 +284,6 @@ def _process_product_row(db: Session, batch: ImportBatch, mapped: dict) -> None:
             product.selling_price = normalize_currency(mapped["selling_price"])
 
     external_sku = mapped.get("external_sku") or sku
-    from app.models import ChannelProduct
 
     existing_mapping = (
         db.query(ChannelProduct)
@@ -272,3 +305,80 @@ def _process_product_row(db: Session, batch: ImportBatch, mapped: dict) -> None:
                 mapping_method="exact",
             )
         )
+
+
+def _process_returns_row(db: Session, batch: ImportBatch, mapped: dict, date_format: str | None) -> date | None:
+    external_sku = mapped.get("external_sku")
+    if not external_sku:
+        raise IngestionRowError("missing SKU")
+
+    product, channel_product = resolve_product(db, batch.business_id, batch.channel_id, external_sku)
+    if not product:
+        raise IngestionRowError(f"UNMAPPED_SKU:{normalize_sku(external_sku)}")
+
+    external_order_id = mapped.get("external_order_id")
+    if not external_order_id:
+        raise IngestionRowError("missing order id")
+
+    order = (
+        db.query(Order)
+        .filter(
+            Order.business_id == batch.business_id,
+            Order.channel_id == batch.channel_id,
+            Order.external_order_id == external_order_id,
+        )
+        .first()
+    )
+    if not order:
+        raise IngestionRowError(f"no matching order for return: {external_order_id}")
+
+    order_line = (
+        db.query(OrderLine)
+        .filter(OrderLine.order_id == order.id, OrderLine.channel_product_id == channel_product.id)
+        .first()
+    )
+    if not order_line:
+        raise IngestionRowError(
+            f"no matching order line for return: order {external_order_id} / sku {external_sku}"
+        )
+
+    return_date_raw = mapped.get("return_date")
+    if not return_date_raw:
+        raise IngestionRowError("missing return date")
+    return_date_value = normalize_date(return_date_raw, date_format)
+
+    # dedup: the same order_line returned again on the same return_date is
+    # treated as a re-upload of the same return event, not a second return.
+    existing_return = (
+        db.query(Return)
+        .filter(Return.order_line_id == order_line.id, Return.return_date == return_date_value)
+        .first()
+    )
+    if existing_return:
+        raise DuplicateRowSkipped(
+            f"duplicate return: order {external_order_id} / sku {external_sku} on {return_date_value}"
+        )
+
+    quantity = int(mapped.get("quantity") or order_line.quantity)
+
+    refund_amount_raw = mapped.get("refund_amount")
+    if refund_amount_raw:
+        refund_amount = normalize_currency(refund_amount_raw)
+    else:
+        # No refund amount given — fall back to the net amount paid on the
+        # original line (gross - discount). A simplification: doesn't
+        # prorate for partial-quantity returns on a multi-unit line.
+        refund_amount = order_line.gross_amount - order_line.discount_amount
+
+    db.add(
+        Return(
+            business_id=batch.business_id,
+            order_line_id=order_line.id,
+            quantity=quantity,
+            return_date=return_date_value,
+            reason=mapped.get("reason"),
+            refund_amount=refund_amount,
+        )
+    )
+
+    return return_date_value
