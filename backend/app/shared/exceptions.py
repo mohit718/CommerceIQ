@@ -22,3 +22,20 @@ class DuplicateEntityError(CommerceIQError):
 class ValidationFailedError(CommerceIQError):
     def __init__(self, detail: str):
         super().__init__(detail)
+
+
+class IngestionRowError(CommerceIQError):
+    """A single CSV row could not be processed (bad data, unmapped SKU,
+    etc). The pipeline catches this per-row so one bad row doesn't fail
+    the whole import batch — it's recorded on ImportRawRow.error_message
+    and counted in ImportBatch.error_count."""
+    def __init__(self, detail: str):
+        super().__init__(detail)
+
+
+class DuplicateRowSkipped(CommerceIQError):
+    """Raised when a row is a legitimate duplicate of already-imported
+    data (e.g. re-uploading the same sales file). This is NOT counted as
+    an error — it's expected, intentional dedup behavior."""
+    def __init__(self, detail: str = "duplicate row, skipped"):
+        super().__init__(detail)
