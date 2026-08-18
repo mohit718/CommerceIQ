@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     # Redis / Celery (wired up in Phase 7)
     redis_url: str = "redis://localhost:6379/0"
 
+    # File storage — 'local' or 's3'. See app/ingestion/storage/__init__.py.
+    storage_backend: str = "local"
+    local_storage_dir: str = "./storage/uploads"
+    s3_bucket: str | None = None
+    s3_region: str | None = None
+
 
 @lru_cache
 def get_settings() -> Settings:
