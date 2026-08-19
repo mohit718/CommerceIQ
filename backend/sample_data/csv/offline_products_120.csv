@@ -1,0 +1,121 @@
+Master SKU,Channel SKU,Product Name,Brand,Category,Cost Price,Selling Price
+CIQ-AUD-0001,POS-00001,TWS Earbuds Black 001,boAt,Audio,370,760
+CIQ-WEA-0002,POS-00002,Fitness Band Grey 002,Noise,Wearables,1950,3320
+CIQ-ACC-0003,POS-00003,Phone Stand Black 003,Acme,Accessories,80,210
+CIQ-TRA-0004,POS-00004,Organizer Pouch Grey 004,Acme Gear,Travel,1200,1950
+CIQ-HOM-0005,POS-00005,Desk Lamp Black 005,Acme Home,Home,1320,2330
+CIQ-MOB-0006,POS-00006,Wireless Charger Grey 006,Acme Mobile,Mobile,660,1610
+CIQ-AUD-0007,POS-00007,Neckband Black 007,boAt,Audio,1430,3050
+CIQ-WEA-0008,POS-00008,Kids Tracker Grey 008,Noise,Wearables,1780,2960
+CIQ-ACC-0009,POS-00009,USB-C Cable Black 009,Acme,Accessories,620,1070
+CIQ-TRA-0010,POS-00010,Laptop Sleeve Grey 010,Acme Gear,Travel,1410,2890
+CIQ-HOM-0011,POS-00011,Air Purifier Mini Black 011,Acme Home,Home,1260,2460
+CIQ-MOB-0012,POS-00012,Screen Protector Grey 012,Acme Mobile,Mobile,450,1140
+CIQ-AUD-0013,POS-00013,TWS Earbuds Black 013,boAt,Audio,1190,2230
+CIQ-WEA-0014,POS-00014,Fitness Band Grey 014,Noise,Wearables,1960,3480
+CIQ-ACC-0015,POS-00015,Phone Stand Black 015,Acme,Accessories,410,670
+CIQ-TRA-0016,POS-00016,Organizer Pouch Grey 016,Acme Gear,Travel,790,1330
+CIQ-HOM-0017,POS-00017,Desk Lamp Black 017,Acme Home,Home,930,2190
+CIQ-MOB-0018,POS-00018,Wireless Charger Grey 018,Acme Mobile,Mobile,810,1640
+CIQ-AUD-0019,POS-00019,Neckband Black 019,boAt,Audio,870,2090
+CIQ-WEA-0020,POS-00020,Kids Tracker Grey 020,Noise,Wearables,790,1460
+CIQ-ACC-0021,POS-00021,USB-C Cable Black 021,Acme,Accessories,740,1210
+CIQ-TRA-0022,POS-00022,Laptop Sleeve Grey 022,Acme Gear,Travel,1470,3200
+CIQ-HOM-0023,POS-00023,Air Purifier Mini Black 023,Acme Home,Home,2040,4150
+CIQ-MOB-0024,POS-00024,Screen Protector Grey 024,Acme Mobile,Mobile,630,1480
+CIQ-AUD-0025,POS-00025,TWS Earbuds Black 025,boAt,Audio,730,1470
+CIQ-WEA-0026,POS-00026,Fitness Band Grey 026,Noise,Wearables,600,1380
+CIQ-ACC-0027,POS-00027,Phone Stand Black 027,Acme,Accessories,280,570
+CIQ-TRA-0028,POS-00028,Organizer Pouch Grey 028,Acme Gear,Travel,1100,1900
+CIQ-HOM-0029,POS-00029,Desk Lamp Black 029,Acme Home,Home,940,2070
+CIQ-MOB-0030,POS-00030,Wireless Charger Grey 030,Acme Mobile,Mobile,880,1520
+CIQ-AUD-0031,POS-00031,Neckband Black 031,boAt,Audio,900,1910
+CIQ-WEA-0032,POS-00032,Kids Tracker Grey 032,Noise,Wearables,1920,4270
+CIQ-ACC-0033,POS-00033,USB-C Cable Black 033,Acme,Accessories,210,500
+CIQ-TRA-0034,POS-00034,Laptop Sleeve Grey 034,Acme Gear,Travel,1290,3010
+CIQ-HOM-0035,POS-00035,Air Purifier Mini Black 035,Acme Home,Home,2140,3770
+CIQ-MOB-0036,POS-00036,Screen Protector Grey 036,Acme Mobile,Mobile,330,610
+CIQ-AUD-0037,POS-00037,TWS Earbuds Black 037,boAt,Audio,850,1490
+CIQ-WEA-0038,POS-00038,Fitness Band Grey 038,Noise,Wearables,1520,3110
+CIQ-ACC-0039,POS-00039,Phone Stand Black 039,Acme,Accessories,220,520
+CIQ-TRA-0040,POS-00040,Organizer Pouch Grey 040,Acme Gear,Travel,700,1720
+CIQ-HOM-0041,POS-00041,Desk Lamp Black 041,Acme Home,Home,780,1590
+CIQ-MOB-0042,POS-00042,Wireless Charger Grey 042,Acme Mobile,Mobile,750,1460
+CIQ-AUD-0043,POS-00043,Neckband Black 043,boAt,Audio,490,920
+CIQ-WEA-0044,POS-00044,Kids Tracker Grey 044,Noise,Wearables,2120,4130
+CIQ-ACC-0045,POS-00045,USB-C Cable Black 045,Acme,Accessories,150,340
+CIQ-TRA-0046,POS-00046,Laptop Sleeve Grey 046,Acme Gear,Travel,1020,2630
+CIQ-HOM-0047,POS-00047,Air Purifier Mini Black 047,Acme Home,Home,900,2080
+CIQ-MOB-0048,POS-00048,Screen Protector Grey 048,Acme Mobile,Mobile,780,1640
+CIQ-AUD-0049,POS-00049,TWS Earbuds Black 049,boAt,Audio,1080,2480
+CIQ-WEA-0050,POS-00050,Fitness Band Grey 050,Noise,Wearables,1400,3560
+CIQ-ACC-0051,POS-00051,Phone Stand Black 051,Acme,Accessories,360,790
+CIQ-TRA-0052,POS-00052,Organizer Pouch Grey 052,Acme Gear,Travel,650,1200
+CIQ-HOM-0053,POS-00053,Desk Lamp Black 053,Acme Home,Home,460,810
+CIQ-MOB-0054,POS-00054,Wireless Charger Grey 054,Acme Mobile,Mobile,700,1290
+CIQ-AUD-0055,POS-00055,Neckband Black 055,boAt,Audio,1060,1840
+CIQ-WEA-0056,POS-00056,Kids Tracker Grey 056,Noise,Wearables,1180,2800
+CIQ-ACC-0057,POS-00057,USB-C Cable Black 057,Acme,Accessories,240,600
+CIQ-TRA-0058,POS-00058,Laptop Sleeve Grey 058,Acme Gear,Travel,530,960
+CIQ-HOM-0059,POS-00059,Air Purifier Mini Black 059,Acme Home,Home,1410,3370
+CIQ-MOB-0060,POS-00060,Screen Protector Grey 060,Acme Mobile,Mobile,850,1700
+CIQ-AUD-0061,POS-00061,TWS Earbuds Black 061,boAt,Audio,1300,2380
+CIQ-WEA-0062,POS-00062,Fitness Band Grey 062,Noise,Wearables,710,1450
+CIQ-ACC-0063,POS-00063,Phone Stand Black 063,Acme,Accessories,120,270
+CIQ-TRA-0064,POS-00064,Organizer Pouch Grey 064,Acme Gear,Travel,730,1380
+CIQ-HOM-0065,POS-00065,Desk Lamp Black 065,Acme Home,Home,810,2010
+CIQ-MOB-0066,POS-00066,Wireless Charger Grey 066,Acme Mobile,Mobile,400,970
+CIQ-AUD-0067,POS-00067,Neckband Black 067,boAt,Audio,980,1640
+CIQ-WEA-0068,POS-00068,Kids Tracker Grey 068,Noise,Wearables,2660,4850
+CIQ-ACC-0069,POS-00069,USB-C Cable Black 069,Acme,Accessories,440,720
+CIQ-TRA-0070,POS-00070,Laptop Sleeve Grey 070,Acme Gear,Travel,980,1720
+CIQ-HOM-0071,POS-00071,Air Purifier Mini Black 071,Acme Home,Home,860,1760
+CIQ-MOB-0072,POS-00072,Screen Protector Grey 072,Acme Mobile,Mobile,1030,2320
+CIQ-AUD-0073,POS-00073,TWS Earbuds Black 073,boAt,Audio,440,740
+CIQ-WEA-0074,POS-00074,Fitness Band Grey 074,Noise,Wearables,630,1280
+CIQ-ACC-0075,POS-00075,Phone Stand Black 075,Acme,Accessories,300,670
+CIQ-TRA-0076,POS-00076,Organizer Pouch Grey 076,Acme Gear,Travel,550,1060
+CIQ-HOM-0077,POS-00077,Desk Lamp Black 077,Acme Home,Home,1090,1860
+CIQ-MOB-0078,POS-00078,Wireless Charger Grey 078,Acme Mobile,Mobile,380,680
+CIQ-AUD-0079,POS-00079,Neckband Black 079,boAt,Audio,1000,2070
+CIQ-WEA-0080,POS-00080,Kids Tracker Grey 080,Noise,Wearables,2100,3960
+CIQ-ACC-0081,POS-00081,USB-C Cable Black 081,Acme,Accessories,210,390
+CIQ-TRA-0082,POS-00082,Laptop Sleeve Grey 082,Acme Gear,Travel,1080,2710
+CIQ-HOM-0083,POS-00083,Air Purifier Mini Black 083,Acme Home,Home,1400,3600
+CIQ-MOB-0084,POS-00084,Screen Protector Grey 084,Acme Mobile,Mobile,790,1590
+CIQ-AUD-0085,POS-00085,TWS Earbuds Black 085,boAt,Audio,390,950
+CIQ-WEA-0086,POS-00086,Fitness Band Grey 086,Noise,Wearables,800,1980
+CIQ-ACC-0087,POS-00087,Phone Stand Black 087,Acme,Accessories,120,280
+CIQ-TRA-0088,POS-00088,Organizer Pouch Grey 088,Acme Gear,Travel,1050,1750
+CIQ-HOM-0089,POS-00089,Desk Lamp Black 089,Acme Home,Home,1380,2970
+CIQ-MOB-0090,POS-00090,Wireless Charger Grey 090,Acme Mobile,Mobile,690,1320
+CIQ-AUD-0091,POS-00091,Neckband Black 091,boAt,Audio,930,1520
+CIQ-WEA-0092,POS-00092,Kids Tracker Grey 092,Noise,Wearables,680,1380
+CIQ-ACC-0093,POS-00093,USB-C Cable Black 093,Acme,Accessories,290,730
+CIQ-TRA-0094,POS-00094,Laptop Sleeve Grey 094,Acme Gear,Travel,1650,3320
+CIQ-HOM-0095,POS-00095,Air Purifier Mini Black 095,Acme Home,Home,1980,3280
+CIQ-MOB-0096,POS-00096,Screen Protector Grey 096,Acme Mobile,Mobile,920,1770
+CIQ-AUD-0097,POS-00097,TWS Earbuds Black 097,boAt,Audio,720,1620
+CIQ-WEA-0098,POS-00098,Fitness Band Grey 098,Noise,Wearables,1110,2410
+CIQ-ACC-0099,POS-00099,Phone Stand Black 099,Acme,Accessories,270,550
+CIQ-TRA-0100,POS-00100,Organizer Pouch Grey 100,Acme Gear,Travel,630,1630
+CIQ-HOM-0101,POS-00101,Desk Lamp Black 101,Acme Home,Home,830,1400
+CIQ-MOB-0102,POS-00102,Wireless Charger Grey 102,Acme Mobile,Mobile,710,1720
+CIQ-AUD-0103,POS-00103,Neckband Black 103,boAt,Audio,630,1540
+CIQ-WEA-0104,POS-00104,Kids Tracker Grey 104,Noise,Wearables,1810,3340
+CIQ-ACC-0105,POS-00105,USB-C Cable Black 105,Acme,Accessories,200,370
+CIQ-TRA-0106,POS-00106,Laptop Sleeve Grey 106,Acme Gear,Travel,980,1770
+CIQ-HOM-0107,POS-00107,Air Purifier Mini Black 107,Acme Home,Home,1730,4270
+CIQ-MOB-0108,POS-00108,Screen Protector Grey 108,Acme Mobile,Mobile,1460,2440
+CIQ-AUD-0109,POS-00109,TWS Earbuds Black 109,boAt,Audio,950,2450
+CIQ-WEA-0110,POS-00110,Fitness Band Grey 110,Noise,Wearables,860,1680
+CIQ-ACC-0111,POS-00111,Phone Stand Black 111,Acme,Accessories,320,550
+CIQ-TRA-0112,POS-00112,Organizer Pouch Grey 112,Acme Gear,Travel,780,1360
+CIQ-HOM-0113,POS-00113,Desk Lamp Black 113,Acme Home,Home,1770,2900
+CIQ-MOB-0114,POS-00114,Wireless Charger Grey 114,Acme Mobile,Mobile,400,900
+CIQ-AUD-0115,POS-00115,Neckband Black 115,boAt,Audio,1080,2440
+CIQ-WEA-0116,POS-00116,Kids Tracker Grey 116,Noise,Wearables,1930,3200
+CIQ-ACC-0117,POS-00117,USB-C Cable Black 117,Acme,Accessories,170,430
+CIQ-TRA-0118,POS-00118,Laptop Sleeve Grey 118,Acme Gear,Travel,680,1400
+CIQ-HOM-0119,POS-00119,Air Purifier Mini Black 119,Acme Home,Home,2600,4380
+CIQ-MOB-0120,POS-00120,Screen Protector Grey 120,Acme Mobile,Mobile,1670,2980

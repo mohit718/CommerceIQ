@@ -7,7 +7,10 @@ __pycache__/
 venv/
 *.egg-info/
 .DS_Store
-
-.vscode/
+*:Zone.Identifier
 
 storage/
+
+.vscode/
+todo.md
+
