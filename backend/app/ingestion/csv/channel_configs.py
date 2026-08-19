@@ -109,7 +109,7 @@ CHANNEL_CONFIGS: dict[str, dict] = {
         },
         "returns": {
             "column_map": {
-                "external_order_id": "Name",
+                "external_order_id": "Order Name",
                 "external_sku": "Lineitem sku",
                 "quantity": "Return Quantity",
                 "return_date": "Return Date",
