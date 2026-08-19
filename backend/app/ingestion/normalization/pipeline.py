@@ -361,6 +361,7 @@ def _process_returns_row(db: Session, batch: ImportBatch, mapped: dict, date_for
 
     quantity = int(mapped.get("quantity") or order_line.quantity)
 
+    refund_amount = 0
     refund_amount_raw = mapped.get("refund_amount")
     if refund_amount_raw:
         refund_amount = normalize_currency(refund_amount_raw)
