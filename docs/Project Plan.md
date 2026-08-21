@@ -804,8 +804,8 @@ The system should answer using the company's actual data.
 
 # 19. Project Phases & Milestones
 
-## Phase 0 — Requirements & Product Design
-
+# Phase 0 — Requirements & Product Design
+> Deadline: 17 August
 ### Objective
 
 Define the business and technical requirements.
@@ -836,6 +836,7 @@ Deliverables:
 ---
 
 # Phase 1 — Data Foundation
+> Deadline: 17 August
 
 ### Objective
 
@@ -874,6 +875,7 @@ Normalized PostgreSQL data
 ---
 
 # Phase 2 — Data Normalization
+> Deadline: 18 August
 
 ### Objective
 
@@ -907,6 +909,7 @@ Offline SKU ────┘
 ---
 
 # Phase 3 — Analytics Engine
+> Deadline: 19 August
 
 ### Objective
 
@@ -938,6 +941,7 @@ All major KPIs can be calculated from normalized data.
 ---
 
 # Phase 4 — Inventory Intelligence
+> Deadline: 20 August
 
 ### Objective
 
@@ -968,6 +972,7 @@ Example:
 ---
 
 # Phase 5 — Insight Engine
+> Deadline: 21 August
 
 ### Objective
 
@@ -1014,6 +1019,7 @@ Action: Increase inventory
 ---
 
 # Phase 6 — Dashboard
+> Deadline: 26 August
 
 ### Objective
 
@@ -1074,6 +1080,7 @@ Alerts
 ---
 
 # Phase 7 — Reporting & Notifications
+Deadline: 27 August
 
 ### Objective
 
@@ -1107,6 +1114,7 @@ Inventory Alerts
 ---
 
 # Phase 8 — Forecasting
+Deadline: 28 August
 
 ### Objective
 
@@ -1133,6 +1141,7 @@ Example:
 ---
 
 # Phase 9 — AI Business Analyst
+Deadline: 31 August
 
 ### Objective
 
