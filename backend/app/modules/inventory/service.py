@@ -31,12 +31,25 @@ File layout:
 """
 import math
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
 
 from sqlalchemy.orm import Session
 
 from app.models import Channel, DailyProductMetric, InventorySnapshot, Product
+
+
+@dataclass(frozen=True)
+class StockInfo:
+    """The resolved stock position for one (product, channel) row — or one
+    product pooled across all its channels when channel_id isn't given.
+    Immutable: this is a snapshot of a query result, never mutated after
+    resolve_stock_rows() builds it."""
+
+    stock: int
+    snapshot_date: date | None
+    first_seen: date | None
 
 # ==============================================================================
 # 1. PUBLIC API
@@ -95,7 +108,7 @@ def compute_inventory_status(
             continue  # defensive — shouldn't happen given the FK, but don't crash a dashboard read over it
 
         velocity_key = (product_id, ch_id) if channel_id is not None else product_id
-        latest_stock = stock_info["stock"]
+        latest_stock = stock_info.stock
 
         avg_daily_velocity = calculate_average_daily_velocity(
             units_sold_in_window=velocity_by_key.get(velocity_key, 0),
@@ -106,7 +119,7 @@ def compute_inventory_status(
 
         last_sale_date = last_sale_by_key.get(velocity_key)
         aging_days, aging_basis = calculate_days_since_last_sale(
-            as_of_date, last_sale_date, stock_info["first_seen"]
+            as_of_date, last_sale_date, stock_info.first_seen
         )
 
         inventory_value = calculate_inventory_value(latest_stock, product.cost_price)
@@ -128,11 +141,11 @@ def compute_inventory_status(
                 "channel_id": ch_id,
                 "channel_name": channels.get(ch_id) if ch_id else None,
                 "latest_stock": latest_stock,
-                "snapshot_date": stock_info["snapshot_date"],
+                "snapshot_date": stock_info.snapshot_date,
                 "avg_daily_velocity": avg_daily_velocity.quantize(Decimal("0.01")),
                 "coverage_days": coverage_days.quantize(Decimal("0.1")) if coverage_days is not None else None,
                 "last_sale_date": last_sale_date,
-                "first_seen_date": stock_info["first_seen"],
+                "first_seen_date": stock_info.first_seen,
                 "aging_days": aging_days,
                 "aging_basis": aging_basis,
                 "inventory_value": inventory_value,
@@ -191,7 +204,9 @@ def fetch_latest_and_first_seen_snapshots(
     return latest, first_seen
 
 
-def resolve_stock_rows(latest_by_pc: dict, first_seen_by_pc: dict, channel_id: int | None) -> dict:
+def resolve_stock_rows(
+    latest_by_pc: dict, first_seen_by_pc: dict, channel_id: int | None
+) -> dict[tuple[int, int | None], StockInfo]:
     """Turns the raw per-(product, channel) snapshot lookup into the rows
     compute_inventory_status() actually iterates over.
     channel_id given -> keep per-(product, channel) rows as-is (one row per
@@ -200,7 +215,7 @@ def resolve_stock_rows(latest_by_pc: dict, first_seen_by_pc: dict, channel_id: i
     takes the freshest channel's date, first_seen takes the earliest."""
     if channel_id is not None:
         return {
-            key: {"stock": qty, "snapshot_date": snap_date, "first_seen": first_seen_by_pc[key]}
+            key: StockInfo(stock=qty, snapshot_date=snap_date, first_seen=first_seen_by_pc[key])
             for key, (snap_date, qty) in latest_by_pc.items()
         }
 
@@ -210,11 +225,16 @@ def resolve_stock_rows(latest_by_pc: dict, first_seen_by_pc: dict, channel_id: i
         product_id, channel_id = key
         entry = pooled.setdefault(product_id, {"stock": 0, "snapshot_date": None, "first_seen": None})
         entry["stock"] += qty
-        entry["snapshot_date"] = max(entry["snapshot_date"], snap_date) if entry["snapshot_date"] else snap_date
+        entry["snapshot_date"] = max(d for d in (entry["snapshot_date"], snap_date) if d is not None)
         fs = first_seen_by_pc[key]
-        entry["first_seen"] = min(entry["first_seen"], fs) if entry["first_seen"] else fs
+        entry["first_seen"] = min(d for d in (entry["first_seen"], fs) if d is not None)
 
-    return {(product_id, None): v for product_id, v in pooled.items()}
+    return {
+        (product_id, None): StockInfo(
+            stock=v["stock"], snapshot_date=v["snapshot_date"], first_seen=v["first_seen"]
+        )
+        for product_id, v in pooled.items()
+    }
 
 
 def fetch_sales_signals(
