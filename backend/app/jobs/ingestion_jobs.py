@@ -13,6 +13,7 @@ so the dashboard reflects a new upload without waiting for a scheduled job.
 from app.core.database import SessionLocal
 from app.ingestion.normalization.pipeline import process_batch
 from app.jobs.analytics_jobs import recompute_metrics_for_dates
+from app.jobs.insight_jobs import generate_insights_for_business
 from app.models import ImportBatch
 from app.shared.logging import get_logger
 
@@ -22,6 +23,11 @@ logger = get_logger(__name__)
 # daily_product_metrics / daily_channel_metrics. Inventory and product
 # catalog imports don't affect sales analytics.
 ANALYTICS_RELEVANT_IMPORT_TYPES = {"sales", "returns"}
+
+# These three can change the signals insights depend on (sales/returns feed
+# Phase 3 metrics; inventory feeds Phase 4 stock levels). Product catalog
+# imports don't change either, so they're excluded.
+INSIGHT_RELEVANT_IMPORT_TYPES = {"sales", "returns", "inventory"}
 
 
 def run_import_job(batch_id: int) -> None:
@@ -45,6 +51,9 @@ def run_import_job(batch_id: int) -> None:
             recompute_metrics_for_dates(
                 db, batch.business_id, touched_dates, channel_id=batch.channel_id
             )
+
+        if batch.import_type in INSIGHT_RELEVANT_IMPORT_TYPES:
+            generate_insights_for_business(db, batch.business_id)
 
     except Exception:
         logger.exception("import batch %s failed", batch_id)
